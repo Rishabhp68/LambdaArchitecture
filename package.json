@@ -2,23 +2,30 @@
   "name": "LambdaArchitecture",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "config.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rishabhp68/LambdaArchitecture.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rishabhp68/LambdaArchitecture/issues"
+  },
+  "homepage": "https://github.com/Rishabhp68/LambdaArchitecture#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "eclairjs": "^0.10.2",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "kafka-node": "^5.0.0",
-    "kafkajs": "^1.15.0",
+    "nodemon": "^2.0.6",
     "socket.io": "^3.0.4",
     "twit": "^2.2.11"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.6"
   }
 }

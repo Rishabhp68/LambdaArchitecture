@@ -1,11 +1,13 @@
-const Twit = require("twit");
 const express = require("express");
-const pushDataToKafka = require("./kafka/producer");
-const config = require("./config");
-require("dotenv").config();
-
+const Twit = require("twit");
 const app = express();
 const server = require("http").Server(app);
+const io = require("socket.io")(server);
+const pushDataToKafka = require("./kafka/producer");
+const config = require("./config");
+const readerStream = require("stream");
+const readableStream = new readerStream.Readable();
+require("dotenv").config();
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -18,11 +20,15 @@ const T = new Twit({
   timeout_ms: 60 * 1000,
   strictssl: true,
 });
-
+var data = 0;
 console.log("login successful");
 
 app.get("/", (req, res, next) => {
   res.render("index.ejs");
+});
+
+app.get("/data", (req, res, next) => {
+  res.send({ label: new Date(), data: data });
 });
 
 var stream = T.stream("statuses/filter", {
@@ -30,10 +36,14 @@ var stream = T.stream("statuses/filter", {
 });
 
 stream.on("tweet", (tweet) => {
-  console.log(tweet);
+  console.log("tweet");
+  const size = new TextEncoder().encode(JSON.stringify(tweet)).length;
+  const kiloBytes = size / 1024;
+  data = data + kiloBytes;
+  console.log("data");
   pushDataToKafka(tweet);
 });
 
-app.listen(3000);
+server.listen(3000);
 
-module.exports = app;
+module.exports = data;
